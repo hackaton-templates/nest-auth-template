@@ -64,6 +64,7 @@ export class AuthService {
       { sub: user.id, jti: uuidv4(), type },
       { secret, expiresIn },
     );
-    return { token, expires: expiresIn };
+    const expires = this.jwtService.decode(token).exp;
+    return { token, expires: expires };
   }
 }
