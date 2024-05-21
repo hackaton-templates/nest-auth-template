@@ -17,26 +17,22 @@ import {
 import { CreateUserDto } from './dto/user.dto';
 
 @Controller('users')
+@UseInterceptors(SanitizerInterceptor)
+@Sanitize('password')
 export default class UsersController {
   constructor(private service: UsersService) {}
 
   @Get()
-  @UseInterceptors(SanitizerInterceptor)
-  @Sanitize('password')
   async findAll() {
     return await this.service.findAll();
   }
 
   @Get(':id')
-  @UseInterceptors(SanitizerInterceptor)
-  @Sanitize('password')
   async find(@Param('id', ParseIntPipe) id: number) {
     return await this.service.find(id);
   }
 
   @Post()
-  @UseInterceptors(SanitizerInterceptor)
-  @Sanitize('password')
   @UsePipes(ValidationPipe)
   async create(@Body() createUserDto: CreateUserDto) {
     return this.service.create(createUserDto);
