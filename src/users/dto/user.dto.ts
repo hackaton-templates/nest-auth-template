@@ -1,5 +1,4 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsNumberString, IsString } from 'class-validator';
 
 export default class UserDto {
@@ -19,4 +18,7 @@ export default class UserDto {
   email: string;
 }
 
-export class CreateUserDto extends OmitType(UserDto, ['id']) {}
+export class CreateUserDto extends OmitType(UserDto, ['id']) {
+  @ApiProperty({ example: '123123' })
+  password: string;
+}
