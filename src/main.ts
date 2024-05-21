@@ -6,6 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
   const config = new DocumentBuilder()
+    .addBearerAuth({ type: 'http' }, 'Access Token')
+    .addBearerAuth({ type: 'http' }, 'Refresh Token')
     .setTitle('nest-auth-template')
     .setDescription('Шаблон NestJS приложения со встроенной авторизацией')
     .setVersion('1.0')

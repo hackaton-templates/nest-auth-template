@@ -19,6 +19,7 @@ import {
   SanitizerInterceptor,
 } from 'src/util/sanitize/sanitize.incerceptor';
 import {
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -49,6 +50,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @UseInterceptors(SanitizerInterceptor)
   @Sanitize('password')
+  @ApiBearerAuth('Access Token')
   @ApiOperation({ summary: 'Профиль авторизованного пользователя' })
   @ApiResponse({ type: UserDto, status: 200 })
   @ApiUnauthorizedResponse({
@@ -61,6 +63,7 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(AuthGuard)
   @Token('refresh')
+  @ApiBearerAuth('Refresh Token')
   @ApiOperation({ summary: 'Обновление токена' })
   @ApiResponse({ type: AuthResultDto, status: 200 })
   @ApiUnauthorizedResponse({
