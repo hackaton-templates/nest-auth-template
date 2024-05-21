@@ -25,6 +25,11 @@ export class AuthService {
     return this.userService.find(user_id);
   }
 
+  async refresh(user_id: number) {
+    const user = this.userService.find(user_id);
+    return this._auth(user);
+  }
+
   private async _getUserAndCheckPassword(email: string, password: string) {
     let user: UserDto;
     try {
