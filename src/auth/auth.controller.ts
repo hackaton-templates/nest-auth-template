@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   UseGuards,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +14,10 @@ import { AuthService } from './auth.service';
 import SignInDto from './dto/sign-in';
 import { AuthGuard } from './auth.guard';
 import { Token } from './auth.decorator';
+import {
+  Sanitize,
+  SanitizerInterceptor,
+} from 'src/util/sanitize/sanitize.incerceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +32,8 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(AuthGuard)
+  @UseInterceptors(SanitizerInterceptor)
+  @Sanitize('password')
   async me(@Req() request: Request) {
     return this.authService.me(request.user.sub);
   }
