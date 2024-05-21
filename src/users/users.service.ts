@@ -1,25 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import data from './users.mock';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export default class UsersService {
-  public findAll() {
-    return data;
+  constructor(private prismaService: PrismaService) {}
+
+  async findAll() {
+    return await this.prismaService.user.findMany();
   }
 
-  public find(id: number) {
-    const entry = data.find((d) => d.id == id);
-    if (!entry) {
-      throw new NotFoundException();
-    }
-    return entry;
+  async find(id: number) {
+    const user = await this.prismaService.user
+      .findFirstOrThrow({
+        where: { id },
+      })
+      .catch((err) => {
+        if (err.code == 'P2025') throw new NotFoundException();
+        throw err;
+      });
+    return user;
   }
 
-  public findByName(name: string) {
-    const entry = data.find((d) => d.name == name);
-    if (!entry) {
-      throw new NotFoundException();
-    }
-    return entry;
+  async findByEmail(email: string) {
+    const user = await this.prismaService.user
+      .findFirstOrThrow({
+        where: { email },
+      })
+      .catch((err) => {
+        if (err.code == 'P2025') throw new NotFoundException();
+        throw err;
+      });
+    return user;
   }
 }

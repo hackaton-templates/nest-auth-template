@@ -26,14 +26,14 @@ export class AuthService {
   }
 
   async refresh(user_id: number) {
-    const user = this.userService.find(user_id);
-    return this._auth(user);
+    const user = await this.userService.find(user_id);
+    return await this._auth(user);
   }
 
   private async _getUserAndCheckPassword(email: string, password: string) {
     let user: UserDto;
     try {
-      user = this.userService.findByName(email);
+      user = await this.userService.findByEmail(email);
     } catch (e) {
       throw new UnauthorizedException();
     }

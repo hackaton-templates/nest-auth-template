@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import UsersService from './users.service';
 
 @Controller('users')
@@ -6,12 +6,12 @@ export default class UsersController {
   constructor(private service: UsersService) {}
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  async findAll() {
+    return await this.service.findAll();
   }
 
   @Get(':id')
-  find(@Param('id') id: number) {
-    return this.service.find(id);
+  async find(@Param('id', ParseIntPipe) id: number) {
+    return await this.service.find(id);
   }
 }
