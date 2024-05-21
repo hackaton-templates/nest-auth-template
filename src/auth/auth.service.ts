@@ -21,6 +21,10 @@ export class AuthService {
     return await this._auth(user);
   }
 
+  async me(user_id: number) {
+    return this.userService.find(user_id);
+  }
+
   private async _getUserAndCheckPassword(email: string, password: string) {
     let user: UserDto;
     try {
