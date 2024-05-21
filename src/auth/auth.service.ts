@@ -1,11 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import AuthResultDto, { TokenDto } from './dto/auth-result';
+import AuthResultDto from './dto/auth-result';
 import UsersService from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import UserDto from 'src/users/dto/user.dto';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
+import { TokenType } from './types/jwt';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +46,7 @@ export class AuthService {
     };
   }
 
-  private _generateTokenFor(user: UserDto, type: 'access' | 'refresh') {
+  private _generateTokenFor(user: UserDto, type: TokenType) {
     const configKey = `JWT_${type.toUpperCase()}`;
     const secret = this.configService.get<string>(`${configKey}_SECRET`);
     const expiresIn = +this.configService.get<number>(`${configKey}_EXPIRES`);
