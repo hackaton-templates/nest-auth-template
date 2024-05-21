@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import AuthResultDto from './dto/auth-result';
+import AuthResultDto, { TokenDto } from './dto/auth-result';
 import UsersService from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -36,24 +36,24 @@ export class AuthService {
   }
 
   private async _auth(user: UserDto): Promise<AuthResultDto> {
-    const accessToken = this._generateAccessTokenFor(user);
-    const accessTokenExpires =
-      +this.configService.get<number>('JWT_ACCESS_EXPIRES');
-
+    const accessToken = this._generateTokenFor(user, 'access');
+    const refreshToken = this._generateTokenFor(user, 'refresh');
     return {
       user_id: user.id,
-      access_token: {
-        token: accessToken,
-        expires: accessTokenExpires,
-      },
-      refresh_token: {
-        token: '',
-        expires: 0,
-      },
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 
-  private _generateAccessTokenFor(user: UserDto): string {
-    return this.jwtService.sign({ sub: user.id, jti: uuidv4() });
+  private _generateTokenFor(user: UserDto, type: 'access' | 'refresh') {
+    const configKey = `JWT_${type.toUpperCase()}`;
+    const secret = this.configService.get<string>(`${configKey}_SECRET`);
+    const expiresIn = +this.configService.get<number>(`${configKey}_EXPIRES`);
+
+    const token = this.jwtService.sign(
+      { sub: user.id, jti: uuidv4(), type },
+      { secret, expiresIn },
+    );
+    return { token, expires: expiresIn };
   }
 }
