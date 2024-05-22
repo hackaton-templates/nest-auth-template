@@ -6,8 +6,6 @@ import {
   ParseIntPipe,
   Post,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import UsersService from './users.service';
 import {
@@ -47,7 +45,6 @@ export default class UsersController {
   }
 
   @Post()
-  @UsePipes(ValidationPipe)
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @ApiConflictResponse({
     type: ErrorDto,
