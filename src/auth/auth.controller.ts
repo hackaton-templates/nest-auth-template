@@ -58,6 +58,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @HttpCode(200)
   @UseGuards(AuthGuard)
   @Token('refresh')
   @ApiBearerAuth('Refresh Token')
