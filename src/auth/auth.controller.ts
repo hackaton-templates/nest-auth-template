@@ -7,8 +7,6 @@ import {
   Req,
   UseGuards,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import SignInDto from './dto/sign-in';
@@ -36,7 +34,6 @@ export class AuthController {
 
   @Post()
   @HttpCode(200)
-  @UsePipes(ValidationPipe)
   @ApiOperation({ summary: 'Авторизация на сайте' })
   @ApiResponse({ type: AuthResultDto, status: 200 })
   @ApiUnauthorizedResponse({
